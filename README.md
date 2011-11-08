@@ -1,5 +1,7 @@
 # release\_marker
 
+Integrate your deploys with Pivotal Tracker: release markers, changelogs and unicorns!
+
 TODO: links
 
 ## Description
@@ -9,16 +11,9 @@ A gem to help you:
 * track production deploys with release markers in Pivotal Tracker
 * assemble changelogs based on your team's Pivotal Tracker stories
 
-If you use the the `auto_tagger` gem, `release_marker` will even
-figure out the git commit you're deploying, and document that, too.
-
 For more information on Pivotal Tracker:
 
 * TODO: link to Pivotal Tracker
-
-For more information on auto_tagger:
-
-* TODO: link to autotagger README
 
 
 ## Features
@@ -38,9 +33,6 @@ For more information on auto_tagger:
 
 Create a YAML config file:
 
-    auto_tagger: # this section is optional
-      environment: "staging"  # the auto_tagger environment immediately preceding production.
-    
     pivotal_tracker:
       Frontend Web Site:  # all stories in this tracker project are relevant
         project_id: 12345
@@ -60,8 +52,8 @@ In your Rakefile (optionally):
 
 which creates the following rake tasks:
 
-* tracker:changelog # generate a changelog of accepted stories since your last deploy
-* tracker:release # create a release marker in Pivotal Tracker, and generate a changelog
+* release_marker:changelog # generate a changelog of accepted stories since your last deploy
+* release_marker:release # create a release marker in Pivotal Tracker, and generate a changelog
 
 ### With Your Deployment Script
 
