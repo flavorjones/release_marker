@@ -14,4 +14,7 @@ Gem::Specification.new do |gem|
   gem.name          = "release_marker"
   gem.require_paths = ["lib"]
   gem.version       = ReleaseMarker::VERSION
+
+  gem.add_development_dependency "rspec", "~> 2.0"
+  gem.add_development_dependency "rake", ">= 0.8"
 end
