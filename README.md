@@ -4,6 +4,7 @@ Integrate your deploys with Pivotal Tracker: release markers, changelogs and uni
 
 TODO: links
 
+
 ## Description
 
 A gem to help you:
@@ -27,7 +28,9 @@ For more information on Pivotal Tracker:
   a one-to-one relationship between repositories and deployable
   projects.
 
+
 ## Synopsis
+
 
 ### Configuration
 
@@ -44,16 +47,21 @@ Create a YAML config file:
         only_label: "rails"  # which stories are relevant? those labeled "rails"
         release_name: "frontend"  # (optional) name used in the release marker
     
+
 ### With Rake
 
 In your Rakefile (optionally):
 
     require 'release_marker/rake'
 
-which creates the following rake tasks:
+Generate a changelog of accepted stories since your last deploy:
 
-* release_marker:changelog # generate a changelog of accepted stories since your last deploy
-* release_marker:release # create a release marker in Pivotal Tracker, and generate a changelog
+    rake release_marker:changelog
+
+Create a release marker in Pivotal Tracker, and generate a changelog:
+
+    rake release_marker:release
+
 
 ### With Your Deployment Script
 
@@ -63,8 +71,10 @@ In your deployment script:
 
 Then:
 
+    rm = ReleaseMarker.new
+
     # generate a changelog of accepted stories since your last deploy
-    changelog = ReleaseMarker.changelog
+    changelog = rm.changelog
 
     # create a release marker in Pivotal Tracker
-    ReleaseMarker.release
+    rm.release

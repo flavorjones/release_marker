@@ -1,3 +1,3 @@
-class ReleaseMarker
+module ReleaseMarker
   VERSION = "0.0.1"
 end
