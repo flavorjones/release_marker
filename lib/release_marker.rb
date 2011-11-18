@@ -6,6 +6,7 @@ require "yaml"
 
 module ReleaseMarker
   class ConfigFileNotFound < RuntimeError ; end
+  class InvalidConfig < RuntimeError ; end
 
   def ReleaseMarker.new *args
     ReleaseMarker::ProjectManager.new *args

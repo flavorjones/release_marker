@@ -18,13 +18,14 @@ class ReleaseMarker::ProjectManager
 
   def projects
     @projects ||= begin
-                    raise ReleaseMarker::NoProjectsDefined, "No pivotal_tracker projects defined" unless config["pivotal_tracker"]
-                    config["pivotal_tracker"].collect do |config|
+                    config["pivotal_tracker"].to_a.collect do |config|
                       name = config.keys.first
                       attrs = config.values.first
                       ReleaseMarker::PivotalTrackerProject.new name, attrs
                     end
                   end
+    raise ReleaseMarker::InvalidConfig, "No projects defined" if @projects.empty?
+    @projects
   end
 
   def changelog

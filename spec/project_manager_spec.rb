@@ -111,7 +111,11 @@ describe ReleaseMarker::ProjectManager do
 
   describe "#projects" do
     context "no tracker projects defined" do
-      it "raises an exception"
+      it "raises an exception" do
+        proc {
+          ReleaseMarker.new({"foo" => {"bar" => "bazz"}}).projects
+        }.should raise_error(ReleaseMarker::InvalidConfig)
+      end
     end
 
     context "tracker projects defined" do
