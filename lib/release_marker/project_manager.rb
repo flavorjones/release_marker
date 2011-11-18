@@ -20,7 +20,7 @@ class ReleaseMarker::ProjectManager
     @projects ||= begin
                     raise ReleaseMarker::NoProjectsDefined, "No pivotal_tracker projects defined" unless config["pivotal_tracker"]
                     config["pivotal_tracker"].collect do |name, attrs|
-                      ReleaseMarker::TrackerProject.new name, attrs
+                      ReleaseMarker::PivotalTrackerProject.new name, attrs
                     end
                   end
   end

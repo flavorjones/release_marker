@@ -115,23 +115,23 @@ describe ReleaseMarker::ProjectManager do
     end
 
     context "tracker projects defined" do
-      it "creates a TrackerProject for each pivotal_tracker config entry" do
+      it "creates a PivotalTrackerProject for each pivotal_tracker config entry" do
         rm = ReleaseMarker.new("pivotal_tracker" => [
             {"Project 1" => {"project_id" => 12345, "api_token" => "abcdabcd"}},
             {"Project 2" => {"project_id" => 23456, "api_token" => "12341234"}},
           ])
 
         rm.projects.length.should == 2
-        rm.projects.all? {|p| p.is_a?(ReleaseMarker::TrackerProject)}.should be_true
+        rm.projects.all? {|p| p.is_a?(ReleaseMarker::PivotalTrackerProject)}.should be_true
       end
     end
   end
 
   describe "#changelog" do
-    it "calls #changelog on each TrackerProject, and merges the results"
+    it "calls #changelog on each PivotalTrackerProject, and merges the results"
   end
 
   describe "#release" do
-    it "calls #release on each TrackerProject"
+    it "calls #release on each PivotalTrackerProject"
   end
 end

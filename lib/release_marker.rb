@@ -1,6 +1,6 @@
 require "release_marker/version"
 require "release_marker/project_manager"
-require "release_marker/tracker_project"
+require "release_marker/pivotal_tracker_project"
 
 require "yaml"
 
