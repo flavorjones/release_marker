@@ -76,10 +76,33 @@ describe ReleaseMarker::ProjectManager do
         end
       end
 
-      context "initialized with an argument" do
+      context "initialized with configuration arguments" do
         it "uses that config" do
           ReleaseMarker.new("fizzle" => { "fazzle" => "shizzle" }).config.should == {
             "fizzle" => { "fazzle" => "shizzle" }
+          }
+        end
+      end
+
+      context "initialized with a config_file argument" do
+        around do |spec|
+          in_a_tmp_dir do
+            File.open("foo_fazz.yml", "w") do |f|
+              f.write <<-EOYAML
+                foo:
+                  bar:
+                    bazz: 1234
+                    quux: "abcd"
+              EOYAML
+            end
+
+            spec.call
+          end
+        end
+
+        it "uses that config" do
+          ReleaseMarker.new("foo_fazz.yml").config.should == {
+            "foo" => { "bar" => { "bazz" => 1234, "quux" => "abcd" } }
           }
         end
       end

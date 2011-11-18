@@ -1,8 +1,12 @@
 class ReleaseMarker::ProjectManager
   CONFIG_FILE_NAME = "release_marker.yml"
 
-  def initialize config=nil
-    @config = config if ! config.nil?
+  def initialize arg=nil
+    if arg.is_a?(String)
+      @config = YAML.load_file arg
+    elsif arg.is_a?(Hash)
+      @config = arg
+    end
   end
 
   def config
