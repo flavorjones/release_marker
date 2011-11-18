@@ -1,6 +1,17 @@
 class ReleaseMarker::ProjectManager
   CONFIG_FILE_NAME = "release_marker.yml"
 
+  class << self
+    def register_project config_name, klass
+      @registered_projects ||= {}
+      @registered_projects[config_name] = klass
+    end
+
+    def registered_projects
+      @registered_projects ||= {}
+    end
+  end
+
   def initialize arg=nil
     if arg.is_a?(String)
       @config = YAML.load_file arg
@@ -18,11 +29,15 @@ class ReleaseMarker::ProjectManager
 
   def projects
     @projects ||= begin
-                    config["pivotal_tracker"].to_a.collect do |config|
-                      name = config.keys.first
-                      attrs = config.values.first
-                      ReleaseMarker::PivotalTrackerProject.new name, attrs
+                    projects = []
+                    self.class.registered_projects.each do |config_name, klass|
+                      config[config_name].to_a.collect do |config|
+                        name = config.keys.first
+                        attrs = config.values.first
+                        projects << klass.new(name, attrs)
+                      end
                     end
+                    projects
                   end
     raise ReleaseMarker::InvalidConfig, "No projects defined" if @projects.empty?
     @projects
