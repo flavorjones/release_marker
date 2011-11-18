@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe ReleaseMarker::ProjectManager do
   describe "#config" do
@@ -121,17 +121,49 @@ describe ReleaseMarker::ProjectManager do
             {"Project 2" => {"project_id" => 23456, "api_token" => "12341234"}},
           ])
 
-        rm.projects.length.should == 2
-        rm.projects.all? {|p| p.is_a?(ReleaseMarker::PivotalTrackerProject)}.should be_true
+        ReleaseMarker::PivotalTrackerProject.should_receive(:new).with("Project 1", {"project_id" => 12345, "api_token" => "abcdabcd"}).and_return(:project_1)
+        ReleaseMarker::PivotalTrackerProject.should_receive(:new).with("Project 2", {"project_id" => 23456, "api_token" => "12341234"}).and_return(:project_2)
+
+        rm.projects.should =~ [:project_1, :project_2]
       end
     end
   end
 
   describe "#changelog" do
-    it "calls #changelog on each PivotalTrackerProject, and merges the results"
+    it "calls #changelog on each PivotalTrackerProject, and merges the results" do
+      project_1_config = {"Project 1" => {"project_id" => 12345, "api_token" => "abcdabcd"}}
+      project_2_config = {"Project 2" => {"project_id" => 23456, "api_token" => "12341234"}}
+
+      mock_project_1 = Object.new
+      mock_project_2 = Object.new
+
+      ReleaseMarker::PivotalTrackerProject.stub(:new).with(project_1_config.keys.first, project_1_config.values.first).and_return(mock_project_1)
+      ReleaseMarker::PivotalTrackerProject.stub(:new).with(project_2_config.keys.first, project_2_config.values.first).and_return(mock_project_2)
+
+      changelog_1 = [
+        "(feature) Updated the froonting turlindromes to micturate\n   Some details here",
+        "(bug) App should not rend thee in the gobberworts with a blurglecruncheon\n   Some more details here"
+      ]
+      changelog_2 = [
+        "(feature) West Coast represent, now put your hands up\n   Some details here",
+        "(bug) All I want to know is where the party at?\n   And can I bring my gat?"
+      ]
+
+      mock_project_1.should_receive(:changelog).and_return(changelog_1)
+      mock_project_2.should_receive(:changelog).and_return(changelog_2)
+
+      rm = ReleaseMarker.new("pivotal_tracker" => [project_1_config, project_2_config])
+      rm.changelog.should == (changelog_1 + changelog_2)
+    end
   end
 
   describe "#release" do
-    it "calls #release on each PivotalTrackerProject"
+    context "given a version-id argument" do
+      it "calls #release on each PivotalTrackerProject with that version-id"
+    end
+
+    context "given no arguments" do
+      it "calls #release on each PivotalTrackerProject"
+    end
   end
 end
