@@ -47,6 +47,12 @@ class ReleaseMarker::ProjectManager
     projects.collect(&:changelog).flatten
   end
 
+  def release *args
+    projects.each do |project|
+      project.release *args
+    end
+  end
+
   private
 
   def config_file

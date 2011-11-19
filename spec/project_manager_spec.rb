@@ -163,11 +163,33 @@ describe ReleaseMarker::ProjectManager do
 
   describe "#release" do
     context "given a version-id argument" do
-      it "calls #release on each PivotalTrackerProject with that version-id"
+      it "calls #release on each PivotalTrackerProject with that version-id" do
+        mock_project_1 = Object.new
+        mock_project_2 = Object.new
+
+        rm = ReleaseMarker.new({})
+        rm.stub(:projects).and_return([mock_project_1, mock_project_2])
+
+        mock_project_1.should_receive(:release).with("foo")
+        mock_project_2.should_receive(:release).with("foo")
+
+        rm.release "foo"
+      end
     end
 
     context "given no arguments" do
-      it "calls #release on each PivotalTrackerProject"
+      it "calls #release on each PivotalTrackerProject" do
+        mock_project_1 = Object.new
+        mock_project_2 = Object.new
+
+        rm = ReleaseMarker.new({})
+        rm.stub(:projects).and_return([mock_project_1, mock_project_2])
+
+        mock_project_1.should_receive(:release).with()
+        mock_project_2.should_receive(:release).with()
+
+        rm.release
+      end
     end
   end
 end
