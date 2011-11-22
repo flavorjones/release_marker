@@ -9,28 +9,32 @@ class ReleaseMarker::PivotalTrackerProject
   end
 
   def changelog
-    recent_stories.range(most_recent_release_marker, most_recent_delivered_story).select do |story|
-      story.bug? || story.feature?
-    end.collect do |story|
+    changelog_stories.collect do |story|
       describe story
     end
   end
 
   # -------------------- below this line is not part of the public API --------------------
 
+  def changelog_stories
+    recent_stories.range(oldest_delivered_story, newest_delivered_story).select do |story|
+      story.bug? || story.feature?
+    end
+  end
+
   def recent_stories
     # @recent_stories ||= project.iterations[-2..0].stories
     raise NotImplementedError
   end
 
-  def most_recent_release_marker
+  def oldest_delivered_story
     # @most_recent_release_marker ||= recent_stories.reverse.find do |story|
     #   story.release_marker? && story.name =~ /^#{release_name} /
     # end
     raise NotImplementedError
   end
 
-  def most_recent_delivered_story
+  def newest_delivered_story
     raise NotImplementedError
   end
 
