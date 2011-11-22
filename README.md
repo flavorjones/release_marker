@@ -83,9 +83,9 @@ Required configuration parameters for a Pivotal Tracker project:
 
 Optional configuration parameters for a Pivotal Tracker project:
 
-* "only_label": if not all stories in Tracker are relevant to a
-  release, then only include those stories with this label.
-* "include_chores": a boolean indicating whether to include chores in your changelogs.
+* "include_chores": a boolean indicating whether to include chores in your changelogs (default=false).
+* "only_label": if not all stories in Tracker are relevant to a release, then include only those stories with this label.
+* "except_label": if not all stories in Tracker are relevant to a release, then include only stories without this label.
 
 
 ### With Rake
