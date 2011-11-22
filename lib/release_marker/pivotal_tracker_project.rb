@@ -17,9 +17,13 @@ class ReleaseMarker::PivotalTrackerProject
   # -------------------- below this line is not part of the public API --------------------
 
   def changelog_stories
-    recent_stories.range(oldest_delivered_story, newest_delivered_story).select do |story|
-      story.bug? || story.feature?
+    recently_delivered_stories.select do |story|
+      story.bug? || story.feature? || (@attributes["include_chores"] && story.chore?)
     end
+  end
+
+  def recently_delivered_stories
+    recent_stories.range(oldest_delivered_story, newest_delivered_story)
   end
 
   def recent_stories

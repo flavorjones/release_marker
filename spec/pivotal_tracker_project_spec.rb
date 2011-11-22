@@ -23,13 +23,13 @@ describe ReleaseMarker::PivotalTrackerProject do
 
     describe "#changelog" do
       it "returns an array of multi-line strings representing recently-delivered tracker bugs and features" do
-        ptp = PTP.new "foo", "api_token" => "abcd", "project_id" => "1234"
-        mock_feature = make_story :feature
-        mock_bug     = make_story :bug
+        ptp = PTP.new "foo", {}
+        feature = make_story :feature
+        bug     = make_story :bug
 
-        ptp.stub(:changelog_stories) { [mock_feature, mock_bug] }
-        ptp.should_receive(:describe).with(mock_feature) { "Hello\nFeature\n" }
-        ptp.should_receive(:describe).with(mock_bug)     { "Goodbye\nBug\n" }
+        ptp.stub(:changelog_stories) { [feature, bug] }
+        ptp.should_receive(:describe).with(feature) { "Hello\nFeature\n" }
+        ptp.should_receive(:describe).with(bug)     { "Goodbye\nBug\n" }
 
         ptp.changelog.should == ["Hello\nFeature\n", "Goodbye\nBug\n"]
       end
@@ -53,12 +53,33 @@ describe ReleaseMarker::PivotalTrackerProject do
   describe "Private interface" do
     describe "#changelog_stories" do
       context "with no label options" do
-        it "sorts the stories by delivery status, accepted then delivered"
-        it "by default only includes bugs and features, not chores"
+        let(:release_marker) { make_story :release_marker }
+        let(:feature)        { make_story :feature }
+        let(:chore)          { make_story :chore }
+        let(:bug)            { make_story :bug }
+
+        context "stories are not in order of delivery status" do
+          it "sorts the stories by delivery status, accepted then delivered"
+        end
+
+        it "by default only includes bugs and features from recent_stories, not chores or release_markers" do
+          ptp = PTP.new "foo", {}
+          ptp.stub(:recently_delivered_stories) { [release_marker, feature, chore, bug] }
+          ptp.changelog_stories.should == [feature, bug]
+        end
 
         context "with include_chores" do
-          it "set to true, include chores"
-          it "set to false, exclude chores"
+          it "set to true, include chores" do
+            ptp = PTP.new "foo", {"include_chores" => true}
+            ptp.stub(:recently_delivered_stories) { [release_marker, feature, chore, bug] }
+            ptp.changelog_stories.should == [feature, chore, bug]
+          end
+
+          it "set to false, exclude chores" do
+            ptp = PTP.new "foo", {"include_chores" => false}
+            ptp.stub(:recently_delivered_stories) { [release_marker, feature, chore, bug] }
+            ptp.changelog_stories.should == [feature, bug]
+          end
         end
       end
 
@@ -73,15 +94,19 @@ describe ReleaseMarker::PivotalTrackerProject do
       end
     end
 
+    describe "#recently_delivered_stories" do
+      it "needs specs"
+    end
+
     describe "#recent_stories" do
       it "needs specs"
     end
 
-    describe "#most_recent_release_marker" do
+    describe "#oldest_delivered_story" do
       it "needs specs"
     end
 
-    describe "#most_recent_delivered_story" do
+    describe "#newest_delivered_story" do
       it "needs specs"
     end
 
