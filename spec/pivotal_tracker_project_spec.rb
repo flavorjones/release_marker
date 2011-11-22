@@ -3,6 +3,15 @@ require "spec_helper"
 describe ReleaseMarker::PivotalTrackerProject do
   PTP = ReleaseMarker::PivotalTrackerProject
 
+  def make_story story_type
+    double("Story:#{story_type}", {
+        :release_marker? => (story_type == :release_marker),
+        :bug? => (story_type == :bug),
+        :feature? => (story_type == :feature),
+        :chore? => (story_type == :chore)
+      })
+  end
+
   describe "Public interface" do
     describe ".new" do
       it "requires a string name and a hash of attributes as arguments" do
@@ -15,12 +24,12 @@ describe ReleaseMarker::PivotalTrackerProject do
     describe "#changelog" do
       it "returns an array of multi-line strings representing recently-delivered tracker bugs and features" do
         ptp = PTP.new "foo", "api_token" => "abcd", "project_id" => "1234"
-        mock_new_feature = double "Story:feature", :release_marker? => false, :bug? => false, :feature? => true,  :chore? => false
-        mock_new_bug     = double "Story:bug",     :release_marker? => false, :bug? => true,  :feature? => false, :chore? => false
+        mock_feature = make_story :feature
+        mock_bug     = make_story :bug
 
-        ptp.stub(:changelog_stories) { [mock_new_feature, mock_new_bug] }
-        ptp.should_receive(:describe).with(mock_new_feature) { "Hello\nFeature\n" }
-        ptp.should_receive(:describe).with(mock_new_bug)     { "Goodbye\nBug\n" }
+        ptp.stub(:changelog_stories) { [mock_feature, mock_bug] }
+        ptp.should_receive(:describe).with(mock_feature) { "Hello\nFeature\n" }
+        ptp.should_receive(:describe).with(mock_bug)     { "Goodbye\nBug\n" }
 
         ptp.changelog.should == ["Hello\nFeature\n", "Goodbye\nBug\n"]
       end
