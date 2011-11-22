@@ -86,6 +86,8 @@ Optional configuration parameters for a Pivotal Tracker project:
 * "include_chores": a boolean indicating whether to include chores in your changelogs (default=false).
 * "only_label": if not all stories in Tracker are relevant to a release, then include only those stories with this label.
 * "except_label": if not all stories in Tracker are relevant to a release, then include only stories without this label.
+* "deploy_name": (advanced) the project name used in the release marker (default="").
+  this feature is really only necessary to disambiguate release markers for users who are deploying multiple software bundles from the same Tracker Project.
 
 
 ### With Rake
