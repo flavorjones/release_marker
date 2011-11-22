@@ -9,8 +9,8 @@ class ReleaseMarker::PivotalTrackerProject
   end
 
   def changelog
-    recent_stories.range(most_recent_release_marker, most_recent_delivered_story).reject do |story|
-      !story.bug? && !story.feature?
+    recent_stories.range(most_recent_release_marker, most_recent_delivered_story).select do |story|
+      story.bug? || story.feature?
     end.collect do |story|
       describe story
     end
