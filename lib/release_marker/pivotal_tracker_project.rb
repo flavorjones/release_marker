@@ -17,9 +17,20 @@ class ReleaseMarker::PivotalTrackerProject
   # -------------------- below this line is not part of the public API --------------------
 
   def changelog_stories
-    recently_delivered_stories.select do |story|
+    stories = recently_delivered_stories.select do |story|
       story.bug? || story.feature? || (@attributes["include_chores"] && story.chore?)
     end
+    if @attributes["only_label"]
+      stories = stories.select do |story|
+        story.labels.include? @attributes["only_label"]
+      end
+    end
+    if @attributes["except_label"]
+      stories = stories.reject do |story|
+        story.labels.include? @attributes["except_label"]
+      end
+    end
+    stories
   end
 
   def recently_delivered_stories

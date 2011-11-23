@@ -52,12 +52,12 @@ describe ReleaseMarker::PivotalTrackerProject do
 
   describe "Private interface" do
     describe "#changelog_stories" do
-      context "with no label options" do
-        let(:release_marker) { make_story :release_marker }
-        let(:feature)        { make_story :feature }
-        let(:chore)          { make_story :chore }
-        let(:bug)            { make_story :bug }
+      let(:release_marker) { make_story :release_marker }
+      let(:feature)        { make_story :feature }
+      let(:chore)          { make_story :chore }
+      let(:bug)            { make_story :bug }
 
+      context "with no label options" do
         context "stories are not in order of delivery status" do
           it "sorts the stories by delivery status, accepted then delivered"
         end
@@ -84,13 +84,33 @@ describe ReleaseMarker::PivotalTrackerProject do
       end
 
       context "with only_label option" do
-        it "only includes stories with that label"
-        it "sorts the stories by delivery status, placing included stories above excluded stories, accepted then delivered"
+        context "stories are not in order of delivery status and label inclusiong" do
+          it "sorts the stories by delivery status, placing included stories above excluded stories, accepted then delivered"
+        end
+
+        it "only includes stories with that label" do
+          feature.stub(:labels) { ["foo"] }
+          bug.stub(:labels)     { ["bar"] }
+
+          ptp = PTP.new "foo", {"only_label" => "foo"}
+          ptp.stub(:recently_delivered_stories) { [release_marker, feature, chore, bug] }
+          ptp.changelog_stories.should == [feature]
+        end
       end
 
       context "with except_label option" do
-        it "includes all stories except those with that label"
-        it "sorts the stories by delivery status, placing included stories above excluded stories, accepted then delivered"
+        context "stories are not in order of delivery status and label inclusiong" do
+          it "sorts the stories by delivery status, placing included stories above excluded stories, accepted then delivered"
+        end
+
+        it "includes all stories except those with that label" do
+          feature.stub(:labels) { ["foo"] }
+          bug.stub(:labels)     { ["bar"] }
+
+          ptp = PTP.new "foo", {"except_label" => "foo"}
+          ptp.stub(:recently_delivered_stories) { [release_marker, feature, chore, bug] }
+          ptp.changelog_stories.should == [bug]
+        end
       end
     end
 
