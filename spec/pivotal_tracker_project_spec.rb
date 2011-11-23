@@ -115,7 +115,13 @@ describe ReleaseMarker::PivotalTrackerProject do
     end
 
     describe "#recently_delivered_stories" do
-      it "needs specs"
+      it "returns the range of recent_stories between oldest_delivered_story and newest_delivered_story" do
+        ptp = PTP.new "foo", {"except_label" => "foo"}
+        ptp.stub(:recent_stories) { [0,1,2,3,4,5,6] }
+        ptp.stub(:oldest_delivered_story) { 2 }
+        ptp.stub(:newest_delivered_story) { 4 }
+        ptp.recently_delivered_stories.should == [2,3,4]
+      end
     end
 
     describe "#recent_stories" do

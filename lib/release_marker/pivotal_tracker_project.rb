@@ -34,7 +34,9 @@ class ReleaseMarker::PivotalTrackerProject
   end
 
   def recently_delivered_stories
-    recent_stories.range(oldest_delivered_story, newest_delivered_story)
+    o_index = recent_stories.find_index oldest_delivered_story
+    n_index = recent_stories.find_index newest_delivered_story
+    recent_stories[o_index..n_index]
   end
 
   def recent_stories
