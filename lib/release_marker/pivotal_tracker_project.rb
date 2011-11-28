@@ -3,6 +3,8 @@ require "release_marker/project_manager"
 class ReleaseMarker::PivotalTrackerProject
   ReleaseMarker::ProjectManager.register_project "pivotal_tracker", self
 
+  attr_reader :name, :attributes
+
   def initialize name, attributes
     @name = name
     @attributes = attributes
@@ -18,16 +20,16 @@ class ReleaseMarker::PivotalTrackerProject
 
   def changelog_stories
     stories = recently_delivered_stories.select do |story|
-      story.bug? || story.feature? || (@attributes["include_chores"] && story.chore?)
+      story.bug? || story.feature? || (attributes["include_chores"] && story.chore?)
     end
-    if @attributes["only_label"]
+    if attributes["only_label"]
       stories = stories.select do |story|
-        story.labels.include? @attributes["only_label"]
+        story.labels.include? attributes["only_label"]
       end
     end
-    if @attributes["except_label"]
+    if attributes["except_label"]
       stories = stories.reject do |story|
-        story.labels.include? @attributes["except_label"]
+        story.labels.include? attributes["except_label"]
       end
     end
     stories
