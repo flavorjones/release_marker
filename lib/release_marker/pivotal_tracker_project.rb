@@ -36,9 +36,9 @@ class ReleaseMarker::PivotalTrackerProject
   end
 
   def recently_delivered_stories
-    o_index = recent_stories.find_index oldest_delivered_story
-    n_index = recent_stories.find_index newest_delivered_story
-    recent_stories[o_index..n_index]
+    oldest_j = recent_stories.find_index oldest_delivered_story
+    newest_j = recent_stories.find_index newest_delivered_story
+    recent_stories[oldest_j..newest_j]
   end
 
   def recent_stories
