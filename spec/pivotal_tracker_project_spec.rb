@@ -125,7 +125,17 @@ describe ReleaseMarker::PivotalTrackerProject do
     end
 
     describe "#recent_stories" do
-      it "needs specs"
+      it "returns all stories from the current and previous two iterations" do
+        ptp = PTP.new "foo", {}
+        iteration_proxy = double "IterationProxy"
+        iteration_set = double "IterationSet"
+
+        ptp.stub_chain(:project, :iterations) { iteration_proxy }
+        iteration_proxy.stub(:[]).with(-2..0) { iteration_set }
+        iteration_set.stub(:stories) { [:foo, :bar] }
+
+        ptp.recent_stories.should == [:foo, :bar]
+      end
     end
 
     describe "#oldest_delivered_story" do

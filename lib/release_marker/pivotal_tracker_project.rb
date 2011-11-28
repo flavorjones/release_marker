@@ -42,7 +42,10 @@ class ReleaseMarker::PivotalTrackerProject
   end
 
   def recent_stories
-    # @recent_stories ||= project.iterations[-2..0].stories
+    project.iterations[-2..0].stories
+  end
+
+  def project
     raise NotImplementedError
   end
 
