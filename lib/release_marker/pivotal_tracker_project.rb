@@ -38,7 +38,11 @@ class ReleaseMarker::PivotalTrackerProject
   def recently_delivered_stories
     oldest_j = recent_stories.find_index oldest_delivered_story
     newest_j = recent_stories.find_index newest_delivered_story
-    recent_stories[oldest_j..newest_j]
+    if oldest_j && newest_j
+      recent_stories[oldest_j..newest_j]
+    else
+      []
+    end
   end
 
   def recent_stories
